@@ -8,6 +8,9 @@
     <title>Jurgis Pods · Image Recognition</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.11.0/mdb.min.css" rel="stylesheet"/>
 
     <style>
       .bd-placeholder-img {
@@ -25,17 +28,17 @@
       }
     </style>
 
-    
     <!-- Custom styles for this template -->
     <link href="heroes.css" rel="stylesheet">
   </head>
   <body>
     
 <main>
-  <div class="px-4 py-5 my-5 text-center">
+  <div class="px-4 py-4 my-4 text-center">
     <h1 class="display-5 fw-bold">Case Study: Image Recognition</h1>
-    <div class="col-lg-6 mx-auto">
-      <p class="lead mb-4">Here, we explore how to apply a neural net to detect what's in an image. Incidentally, you might also find out something about me and my work.</p>
+    <div class="col-lg-8 mx-auto">
+      <p class="lead mb-4">Here, we apply a neural net to detect what's in an image. <br/>
+        Incidentally, you might also find out something about me and my work.</p>
     </div>
   </div>
 
@@ -47,13 +50,23 @@
         <canvas id="jurgis"  class="d-block mx-lg-auto img-fluid border rounded-3 shadow mb-4" width="700" height="500"">
           <img src="Jurgis_blau.jpg" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
         </canvas>        
-        <!--<img src="Jurgis_blau.jpg" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">-->
       </div>
       <div class="col-lg-6">
         <h1 class="display-5 fw-bold lh-1 mb-3">Jurgis Pods</h1>
-        <p class="lead">Moin</p>
+        <div id="aboutMe" class="collapse">
+          <p id="aboutMe" class="lead">
+            I consider myself a <a href="https://en.wikipedia.org/wiki/Versatilist">versatilist</a>, a computer scientist by training
+            with a strong focus on Data Engineering and Data Science. My track record mostly contains applications from 
+            machine learning and artificial intelligence, but I like to work on
+            all parts of the software engineering chain (building microservices, automated testing,
+            CI/CD pipelines, infrastructure-as-code, etc.).
+          </p>
+          <p id="aboutMe" class="lead">
+            I find satisfaction in solving problems and making things work.
+          </p>
+        </div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-          <button type="button" class="btn btn-primary btn-lg px-4 me-md-2" onclick="imageDetection('jurgis')">Detect</button>
+          <button type="button" class="btn btn-primary btn-lg px-4 me-md-2" onclick="imageDetection('jurgis')" data-bs-toggle="collapse" href="#aboutMe" role="button" aria-expanded="false" aria-controls="aboutMe">Who is this?</button>
         </div>
       </div>
     </div>
@@ -73,16 +86,25 @@
             <div class="spinner-border spinner-border-sm ml-auto" role="status" aria-hidden="true"></div>
           </div>
         </div>
+        <div id="noPredictionInfo" class="alert alert-info collapse" role="alert">
+          The pretrained model could not detect any objects in this image. See <a href="#methodology">Methodology</a> why this might be the case.
+        </div>
       </div>
       <div class="col-lg-6">
         <h1 class="display-5 fw-bold lh-1 mb-3">Try it</h1>
-        <p class="lead">Here you can run a pretrained TensorFlow object detection model on any(*) image URL. Note: This is a static site, the inference runs completely inside your browser.</p>
+        <p class="lead">Here you can run a pretrained TensorFlow object detection model on any<sup data-bs-toggle="tooltip" data-bs-placement="bottom" title="The server hosting the image must allow usage of the image by another domain by setting permissive CORS-headers.">*)</sup> image URL of your choice - or just a random image.</p>
         <form class="p-3 p-md-3 border rounded-3 bg-light">
           <div class="form-floating mb-3">
-            <input type="url" class="form-control" id="image-url" pattern="https://.*" value="https://farm1.staticflickr.com/8/12283150_12d37e6389_z.jpg">
+            <input type="url" class="form-control" id="image-url" pattern="https://.*" value="https://loremflickr.com/640/480/beer">
             <label for="image-url">Image URL</label>
           </div>
-          <button type="button" class="w-100 btn btn-lg btn-primary px-4 me-md-2" onclick="detectCustomImage()">Detect</button>
+          <div class="btn-toolbar mb-2" role="toolbar" aria-label="Toolbar with button groups">
+            <button type="button" class="w-100 btn btn-lg btn-primary px-4 me-md-2" onclick="detectCustomImage()">Detect</button>
+          </div>
+          <div class="btn-toolbar mb-2" role="toolbar" aria-label="Toolbar with button groups"></div>
+            <button type="button" class="w-100 btn btn-lg btn-primary px-4 me-md-2" onclick="detectRandomImage()">Random image</button>
+          </div>
+          
         </form>
       </div>
     </div>
@@ -91,10 +113,11 @@
   <div class="b-example-divider"></div>
 
   <div class="px-4 py-5 my-5 text-center">
-    <h1 class="display-4 fw-bold">Methodology</h1>
+    <a id="methodology"><h1 class="display-4 fw-bold">Methodology</h1></a>
     <div class="col-lg-6 mx-auto">
-      <p class="lead mb-4">This is a static site, the inference runs completely inside your browser. While the results might not be
-        state-of-the-art, it shows how easy it can be to apply a simple, but effective machine learning model to your data.        
+      <p class="lead mb-4">This is a static site, the inference runs completely inside your browser via <a href="https://www.tensorflow.org/js">TensorFlow.js</a>. 
+        While the results are not perfect - the <a href="https://github.com/tensorflow/tfjs-models/tree/master/coco-ssd">used model</a> is only able to detect <a href="https://tech.amikelive.com/node-718/what-object-categories-labels-are-in-coco-dataset/">80 classes of objects</a> - 
+        it shows how easy it can be to apply a simple, but effective machine learning model to your data.        
         In this case, you don't event need a server. 
       </p>
       <p class="lead mb-4">
@@ -106,28 +129,29 @@
   <div class="b-example-divider mb-0"></div>
 
   <div class="bg-dark text-secondary px-4 py-5 text-center">
-    <div class="py-5">
-      <h1 class="display-5 fw-bold text-white">Dark mode hero</h1>
+    <div class="py-4 mx-4">
+      <h1 class="display-5 fw-bold text-white">Find me here:</h1>
       <div class="col-lg-6 mx-auto">
-        <p class="fs-5 mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-          <button type="button" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">Custom button</button>
-          <button type="button" class="btn btn-outline-light btn-lg px-4">Secondary</button>
+          <!-- Linkedin -->
+          <a class="btn btn-primary" style="background-color: #0082ca;" href="https://www.linkedin.com/in/jurgispods/" role="button">
+            <i class="fab fa-2x fa-linkedin-in"></i>
+          </a>
+          <!-- Github -->
+          <a class="btn btn-primary" style="background-color: #333333;" href="https://github.com/jurgispods/" role="button">
+            <i class="fab fa-2x fa-github"></i>
+          </a>
         </div>
       </div>
     </div>
   </div>
 </main>
 
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <!-- Load TensorFlow.js. This is required to use coco-ssd model. -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"> </script>
-    <!-- Load the coco-ssd model. -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"> </script>
     <script src="image-detection.js"> </script>
-
       
   </body>
 </html>

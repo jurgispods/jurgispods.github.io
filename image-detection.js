@@ -2,6 +2,89 @@
 // available on the index-page because of the script tag above.
 var tfModel = undefined
 
+coco_classes = [
+    "person",
+    "bicycle",
+    "car",
+    "motorcycle",
+    "airplane",
+    "bus",
+    "train",
+    "truck",
+    "boat",
+    "traffic light",
+    "fire hydrant",
+    "stop sign",
+    "parking meter",
+    "bench",
+    "bird",
+    "cat",
+    "dog",
+    "horse",
+    "sheep",
+    "cow",
+    "elephant",
+    "bear",
+    "zebra",
+    "giraffe",
+    "backpack",
+    "umbrella",
+    "handbag",
+    "tie",
+    "suitcase",
+    "frisbee",
+    "skis",
+    "snowboard",
+    "sports ball",
+    "kite",
+    "baseball bat",
+    "baseball glove",
+    "skateboard",
+    "surfboard",
+    "tennis racket",
+    "bottle",
+    "wine glass",
+    "cup",
+    "fork",
+    "knife",
+    "spoon",
+    "bowl",
+    "banana",
+    "apple",
+    "sandwich",
+    "orange",
+    "broccoli",
+    "carrot",
+    "hot dog",
+    "pizza",
+    "donut",
+    "cake",
+    "chair",
+    "couch",
+    "potted plant",
+    "bed",
+    "dining table",
+    "toilet",
+    "tv",
+    "laptop",
+    "mouse",
+    "remote",
+    "keyboard",
+    "cell phone",
+    "microwave",
+    "oven",
+    "toaster",
+    "sink",
+    "refrigerator",
+    "book",
+    "clock",
+    "vase",
+    "scissors",
+    "teddy bear",
+    "hair drier",
+    "toothbrush"
+]
+
 cropToCanvas = (image, canvas, ctx) => {
     const naturalWidth = image.naturalWidth;
     const naturalHeight = image.naturalHeight;
@@ -46,6 +129,10 @@ labelImage = (model, c) => {
 
     model.detect(c).then(predictions => {
         console.log('Predictions: ', predictions);
+
+        if(predictions.length == 0) {
+            $("#noPredictionInfo").collapse('show')
+        }
 
         // Font options.
         const font = "16px sans-serif";
@@ -120,11 +207,7 @@ class FakeModel {
 drawImage = (src, canvas_id, label = true) => {
     var img = new Image();
     console.log(src)
-    if(src.startsWith("https://")) {
-        img.crossOrigin = "Anonymous";  // Sneaky: This enables CORS
-    } else {
-        //img.crossOrigin = "Anonymous";  // Sneaky: This enables CORS
-    }
+    img.crossOrigin = "Anonymous";  // Sneaky: This enables CORS
     img.src = src    
     img.onload = function(){
         console.log(this.width);
@@ -142,6 +225,7 @@ drawImage = (src, canvas_id, label = true) => {
 
 imageDetection = (canvas_id) => {
     const c = document.getElementById(canvas_id)
+    $("#noPredictionInfo").collapse('hide')
     if(canvas_id == "jurgis") {
         const fakeModel = new FakeModel()
         labelImage(fakeModel, c)        
@@ -174,7 +258,17 @@ detectCustomImage = () => {
     drawImage(src, "canvas", label = true);
 };
 
-drawImage("Jurgis_blau.jpg", "jurgis", label = false)
-drawImage("https://farm1.staticflickr.com/8/12283150_12d37e6389_z.jpg", "canvas", label = true)
-$("#modelLoading").collapse('hide')
+detectRandomImage = () => {
+    topic = coco_classes[Math.floor(Math.random()*coco_classes.length)]
+    src = "https://loremflickr.com/640/480/" + topic + "?" + new Date().getTime();
+    console.log(src)
+    drawImage(src, "canvas", label = true);
+};
 
+drawImage("Jurgis_blau.jpg", "jurgis", label = false)
+drawImage("https://loremflickr.com/640/480/beer", "canvas", label = true)
+
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+})
