@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Jurgis Pods">
+    <title>Jurgis Pods · Image Recognition</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="heroes.css" rel="stylesheet">
+  </head>
+  <body>
+    
+<main>
+  <div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">Case Study: Image Recognition</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">Here, we explore how to apply a neural net to detect what's in an image. Incidentally, you might also find out something about me and my work.</p>
+    </div>
+  </div>
+
+  <div class="b-example-divider"></div>
+
+  <div class="container col-xxl-8 px-4 py-5">
+    <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+      <div class="col-10 col-sm-8 col-lg-6">
+        <canvas id="jurgis"  class="d-block mx-lg-auto img-fluid border rounded-3 shadow mb-4" width="700" height="500"">
+          <img src="Jurgis_blau.jpg" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+        </canvas>        
+        <!--<img src="Jurgis_blau.jpg" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">-->
+      </div>
+      <div class="col-lg-6">
+        <h1 class="display-5 fw-bold lh-1 mb-3">Jurgis Pods</h1>
+        <p class="lead">Moin</p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+          <button type="button" class="btn btn-primary btn-lg px-4 me-md-2" onclick="imageDetection('jurgis')">Detect</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="b-example-divider"></div>
+
+  <div class="container col-xxl-8 px-4 py-5">
+    <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+      <div class="col-10 col-sm-8 col-lg-6">
+        <canvas id="canvas"  class="d-block mx-lg-auto img-fluid border rounded-3 shadow mb-4" width="700" height="500"">
+          <img src="https://farm1.staticflickr.com/8/12283150_12d37e6389_z.jpg" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+        </canvas>
+        <div id="modelLoading" class="collapse">
+            <div class="d-flex justify-content-center">
+            Loading TensorFlow model... &nbsp;
+            <div class="spinner-border spinner-border-sm ml-auto" role="status" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <h1 class="display-5 fw-bold lh-1 mb-3">Try it</h1>
+        <p class="lead">Here you can run a pretrained TensorFlow object detection model on any(*) image URL. Note: This is a static site, the inference runs completely inside your browser.</p>
+        <form class="p-3 p-md-3 border rounded-3 bg-light">
+          <div class="form-floating mb-3">
+            <input type="url" class="form-control" id="image-url" pattern="https://.*" value="https://farm1.staticflickr.com/8/12283150_12d37e6389_z.jpg">
+            <label for="image-url">Image URL</label>
+          </div>
+          <button type="button" class="w-100 btn btn-lg btn-primary px-4 me-md-2" onclick="detectCustomImage()">Detect</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="b-example-divider"></div>
+
+  <div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-4 fw-bold">Methodology</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">This is a static site, the inference runs completely inside your browser. While the results might not be
+        state-of-the-art, it shows how easy it can be to apply a simple, but effective machine learning model to your data.        
+        In this case, you don't event need a server. 
+      </p>
+      <p class="lead mb-4">
+        This approach harmonizes with my own philosophy: Start simple, collect feedback, and iterate.
+      </p>
+    </div>
+  </div>
+
+  <div class="b-example-divider mb-0"></div>
+
+  <div class="bg-dark text-secondary px-4 py-5 text-center">
+    <div class="py-5">
+      <h1 class="display-5 fw-bold text-white">Dark mode hero</h1>
+      <div class="col-lg-6 mx-auto">
+        <p class="fs-5 mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <button type="button" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">Custom button</button>
+          <button type="button" class="btn btn-outline-light btn-lg px-4">Secondary</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Load TensorFlow.js. This is required to use coco-ssd model. -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"> </script>
+    <!-- Load the coco-ssd model. -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"> </script>
+    <script src="image-detection.js"> </script>
+
+      
+  </body>
+</html>
