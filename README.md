@@ -1,3 +1,3 @@
-# TODO
+# Jurgis Pods - Github Pages
 
-- besseres Bild von mir
+https://jurgispods.github.io

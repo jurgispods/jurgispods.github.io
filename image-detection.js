@@ -171,33 +171,33 @@ class FakeModel {
         return [
             {
                 "bbox": [
-                    60.0,
-                    10.0,
-                    200.0,
-                    250.0
+                    1.0,
+                    1.0,
+                    408.0,
+                    356.0
                 ],
                 "class": "Software Engineer",
                 "score": 0.999
             },
             {
                 "bbox": [
-                    80.0,
                     20.0,
-                    200.0,
+                    20.0,
+                    300.0,
                     250.0
                 ],
                 "class": "Data Engineer",
-                "score": 0.999
+                "score": 0.998
             },
             {
                 "bbox": [
-                    100.0,
-                    30.0,
-                    200.0,
-                    250.0
+                    130.0,
+                    300.0,
+                    250.0,
+                    -300.0
                 ],
                 "class": "Data Scientist",
-                "score": 0.999
+                "score": 0.997
             }
         ]
     }
@@ -213,8 +213,11 @@ drawImage = (src, canvas_id, label = true) => {
         console.log(this.width);
         const c = document.getElementById(canvas_id);
         const ctx = c.getContext("2d");
-        ctx.drawImage(this, 100, 100);
-        cropToCanvas(this, c, ctx);
+        if(this.width == c.width && this.height == c.height) {
+            ctx.drawImage(this, 0, 0);
+        } else {
+            cropToCanvas(this, c, ctx);
+        }
         console.log("Image drawn.")
         console.log(label)
         if(label) {
@@ -265,7 +268,7 @@ detectRandomImage = () => {
     drawImage(src, "canvas", label = true);
 };
 
-drawImage("Jurgis_blau.jpg", "jurgis", label = false)
+drawImage("Jurgis_crop.jpg", "jurgis", label = false)
 drawImage("https://loremflickr.com/640/480/beer", "canvas", label = true)
 
 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
